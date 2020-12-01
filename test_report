@@ -1,0 +1,8 @@
+test_count=`grep -oP 'test_\w*' /tmp/tarpaulin_build.log | sort -u | wc -l`
+
+echo '<?xml version="1.0" encoding="utf-8"?>'
+echo '<testsuites>
+<testsuite errors="0" failures="0" hostname="`hostname`" name="rusttests" skipped="0" tests="${test_count}" time="0.500">'
+grep -oP 'test_\w*' /tmp/tarpaulin_build.log | sort -u | while read line; do  (echo '<testcase classname="'$line'" name="'$line'" time="0.500"/>'); done;
+echo "</testsuite>
+</testsuites>"

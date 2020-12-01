@@ -1,0 +1,37 @@
+.caching_rust: &caching_rust
+    cache:
+      paths:
+        - .cargo/
+        - .cache/sccache
+        - ./target/x86_64-unknown-linux-musl/release/
+
+stages:
+    - build
+
+build:
+   stage: build
+   image: andrewwebber/rust-ci:1.48.0
+   <<: *caching_rust
+   before_script:
+       - export CARGO_HOME="${PWD}/.cargo"
+       - echo $CARGO_HOME
+       - export SCCACHE_DIR="${PWD}/.cache/sccache"
+       - echo $SCCACHE_DIR
+       - export PATH="/builds/project/app/.cargo/bin:$PATH"
+       - export RUSTC_WRAPPER="/usr/local/cargo/bin/sccache"
+       - echo $RUSTC_WRAPPER
+       - mkdir -p $PWD/{.cargo,.cache} || true
+
+   script:
+       - cargo audit
+       - cargo build --release --target=x86_64-unknown-linux-musl
+       - cargo tarpaulin -v --run-types Tests,Lib | tee /tmp/tarpaulin_build.log
+       - ./test_report | tee ./target/tarpaulin/report.junit.xml
+
+   artifacts:
+     when: always
+     paths:
+       - target/x86_64-unknown-linux-musl/release/
+       - target/tarpaulin/report.junit.xml
+     reports:
+       junit: target/tarpaulin/report.junit.xml

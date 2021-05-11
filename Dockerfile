@@ -1,4 +1,4 @@
-FROM rust:1.52.0-slim
+FROM rust:1.52.1-slim
 RUN apt-get update -y
 RUN apt-get install -y pkg-config libssl-dev
 RUN apt-get install -y musl-tools postgresql-client make cmake curl git build-essential zlib1g-dev yarn openssh-client

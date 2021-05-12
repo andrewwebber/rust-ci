@@ -7,7 +7,7 @@ RUN rustup default stable
 RUN rustup target add wasm32-wasi
 RUN rustup target add wasm32-unknown-unknown
 RUN rustup target add x86_64-unknown-linux-musl
-RUN cargo install cargo-tarpaulin
+RUN cargo install cargo-tarpaulin --version 0.18.0-alpha3
 RUN cargo install sccache
 RUN cargo install wasm-pack
 RUN cargo install cargo-audit --features=fix

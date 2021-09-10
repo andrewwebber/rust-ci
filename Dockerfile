@@ -1,5 +1,6 @@
-FROM rust:1.54.0-slim
+FROM rust:1.55.0-slim
 RUN apt-get update -y
+RUN apt-get upgrade -y
 RUN apt-get install -y pkg-config libssl-dev
 RUN apt-get install -y musl-tools postgresql-client make cmake curl git build-essential zlib1g-dev yarn openssh-client
 RUN rustup update stable
@@ -15,3 +16,4 @@ RUN cargo install cargo-audit --features=fix
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 RUN apt update -y && apt install yarn -y && yarn --help
+ENV CARGO_INCREMENTAL 0
